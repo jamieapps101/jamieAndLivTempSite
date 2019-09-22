@@ -1,4 +1,4 @@
-head {
+body {
   background-color: lightblue;
 }
 
@@ -6,7 +6,28 @@ title {
 
 }
 
+#pageHeading {
+  font-family: "Arial", Arial, sans-serif;
+  color: #gray;
+}
 
-div {
-  background-color: lightgrey;
+.dataDiv {
+  border-style: double;
+  border-color: #1C6EDE;
+  font-family: "Arial", Arial, sans-serif;
+  color: #FFFFFF;
+  max-width: 600px;
+}
+
+#tempDiv {
+  background-color: #9E99F5;
+}
+#pressureDiv {
+  background-color: #4D2282;
+}
+#humidityDiv {
+  background-color: #5DE4DA;
+}
+#charContainer {
+  height: 300px;
 }
