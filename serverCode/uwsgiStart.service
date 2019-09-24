@@ -1,0 +1,8 @@
+[Unit]
+Description=starts up uwsgi service
+
+[Service]
+ExecStart=/home/jamie/website/jamieAndLivTempSite/serverCode/startuWSGI.sh
+
+[Install]
+WantedBy=multi-user.target
