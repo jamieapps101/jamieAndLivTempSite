@@ -17,9 +17,11 @@ import urllib
 
 
 def application(env, start_response):
-    start_response('200 OK', [('Content-Type','text/html'),("Access-Control-Allow-Origin","*")])
-    #pprint.pprint(env)
+    #start_response('200 OK', [('Content-Type','text/html'),("Access-Control-Allow-Origin","*")])
+    start_response('200 OK', [('Content-Type','application/json')])
+    #return [b"Hello World"]
     #print("I got: \n{}\n".format(env["QUERY_STRING"]))
+
     data = dict(urllib.parse.parse_qsl(env["QUERY_STRING"]))
     for key in data:
         try:

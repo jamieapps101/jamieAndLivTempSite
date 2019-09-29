@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to jamieapps.net!</title>
+<link rel="icon" href="favicon.png">
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+	background-color: lightblue;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to jamieapps.net!</h1>
+<!---
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+--->
+<p> This page is a place holder until I can get something nicer in place, 
+apologies for the virtual wasteland </p>
+<!---
+<p><em>Thank you for using nginx.</em></p>
+--->
+
+
+
+    <form>
+        A:<br>
+        <input type="text" id="a" value="1">
+        <br>
+        B:<br>
+        <input type="text" id="b" value="2">
+        <br><br>
+        <input type="button" value="Submit" id="buttonID">
+        <br><br>
+        <p id=output></p>
+    </form> 
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script>
+        //$("buttonID").click(submit( , $('b').val));
+
+        document.getElementById("buttonID").addEventListener("click", submit);
+
+        function submit(inputA, inputB) {
+            inputA = document.getElementById("a").value
+            inputB = document.getElementById("b").value
+            console.log("abt to call")
+            //$.get("test2.py",update());
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = update;
+            request = "https://jamieapps.net/cgi-bin/script.py?a=" + inputA + "&b=" + inputB;
+            console.log(request)
+            xmlhttp.open("GET", request, true);
+            xmlhttp.send();
+            console.log("called it");
+        }
+
+        function update() {
+// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState
+            if (this.readyState == 4) {
+		if(this.status == 200) {
+                	document.getElementById("output").innerHTML = JSON.parse(this.responseText)["result"];
+                	console.log("got no error");
+            	} else {
+               		console.log("got an error");
+			console.log(JSON.stringify(this));
+			console.log("readystate: ", this.readyState);
+		}
+            }
+        }
+    </script>
+
+
+</body>
+</html>
