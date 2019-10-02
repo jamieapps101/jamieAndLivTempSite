@@ -19,31 +19,33 @@ import mysql.connector
 
 def application(env, start_response):
     start_response('200 OK', [('Content-Type','text/html'),("Access-Control-Allow-Origin","*")])
-    #pprint.pprint(env)
-    #print("I got: \n{}\n".format(env["QUERY_STRING"]))
-    #data = dict(urllib.parse.parse_qsl(env["QUERY_STRING"]))
-    #for key in data:
-    #    try:
-    #        data[key] = int(data[key])
-    #    except:
-    #        print(data)
-    #        exit()
-    #recordsRequest = int(data["records"])
-    #mydb = mysql.connector.connect(
-    #    host="localhost",
-    #    user="applicationUser",
-    #    passwd="applicationPassword",
-    #    database = "sensorData"
-    #)
-    #dbcursor = mydb.cursor()
+    pprint.pprint(env)
+    print("I got: \n{}\n".format(env["QUERY_STRING"]))
+    data = dict(urllib.parse.parse_qsl(env["QUERY_STRING"]))
+    success = True
+    for key in data:
+       try:
+           data[key] = int(data[key])
+       except:
+           print(data)
+           success = False
 
-    #command = "SELECT * FROM log ORDER BY id DESC LIMIT 10"
+    recordsRequest = int(data["records"])
+    mydb = mysql.connector.connect(
+       host="localhost",
+       user="applicationUser",
+       passwd="applicationPassword",
+       database = "sensorData"
+    )
+    dbcursor = mydb.cursor()
 
-    #dbcursor.execute(command)
+    command = "SELECT * FROM log ORDER BY id DESC LIMIT " + str(recordsRequest)
 
-    #requestedData = dbcursor.fetchall()
+    dbcursor.execute(command)
 
-    #jsonData = json.dumps(requestedData)
+    requestedData = dbcursor.fetchall()
 
-    #yield jsonData.encode("utf-8")
+    jsonData = json.dumps(requestedData)
+
+    yield jsonData.encode("utf-8")
     yield str("You tried to get data").encode('utf-8')
