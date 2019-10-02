@@ -14,6 +14,7 @@ cgitb.enable()
 import json
 import pprint
 import urllib
+import mysql.connector
 
 
 def application(env, start_response):
@@ -27,7 +28,22 @@ def application(env, start_response):
         except:
             print(data)
             exit()
-    result = {"result":data["a"] + data["b"]}
-    yield json.dumps(result).encode("utf-8")
-    #yield str("hello").encode('utf-8')
+    recordsRequest = int(data["records"])
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="applicationUser",
+        passwd="applicationPassword",
+        database = "sensorData"
+    )
+    dbcursor = mydb.cursor()
 
+    command = "SELECT * FROM log ORDER BY id DESC LIMIT 10"
+
+    dbcursor.execute(command)
+
+    requestedData = dbcursor.fetchall()
+
+    jsonData = json.dumps(requestedData)
+
+    yield jsonData.encode("utf-8")
+    #yield str("hello").encode('utf-8')

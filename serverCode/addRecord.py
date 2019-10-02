@@ -43,8 +43,12 @@ def application(env, start_response):
     )
     dbcursor = mydb.cursor()
 
-    command = "" # need to craft a command
-
+    command = "INSERT INTO log VALUES (" # need to craft a command
+    command += unixTime + ", "
+    command += dateString + ", "
+    command += SQLdata[0] + ", "
+    command += SQLdata[1] + ", "
+    command += SQLdata[2] + ");"
     dbcursor.execute(command)
 
 
