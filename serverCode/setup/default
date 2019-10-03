@@ -1,0 +1,103 @@
+##
+# You should look at the following URL's in order to grasp a solid understanding
+# of Nginx configuration files in order to fully unleash the power of Nginx.
+# http://wiki.nginx.org/Pitfalls
+# http://wiki.nginx.org/QuickStart
+# http://wiki.nginx.org/Configuration
+#
+# Generally, you will want to move this file somewhere, and start with a clean
+# file but keep this around for reference. Or just disable in sites-enabled.
+#
+# Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
+##
+
+
+
+
+upstream uwsgi_server_testApp {
+        server 127.0.0.1:10001;
+}
+
+upstream uwsgi_server_sendApp {
+        server 127.0.0.1:10003;
+}
+
+upstream uwsgi_server_receiveApp {
+        server 127.0.0.1:10002;
+}
+
+
+
+
+server {
+        listen 80 ;
+        listen [::]:80 ;
+	#return 301 https://$server_name$request_uri
+
+        root /var/www/html;
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+        server_name jamieapps.net; # managed by Certbot
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+
+
+		# comment these to disable nginx passthrough
+		#include uwsgi_params;
+                #uwsgi_pass jamieapps.net:10001;
+
+        }
+
+        location /cgi-bin {
+                include uwsgi_params;
+                uwsgi_pass uwsgi_server_testApp;
+        }
+        location /receive {
+                include uwsgi_params;
+                uwsgi_pass uwsgi_server_sendApp;
+        }
+        location /send {
+                include uwsgi_params;
+                uwsgi_pass uwsgi_server_receiveApp;
+        }
+
+        #return 301 https://$host$request_uri;
+}
+
+
+server {
+        listen [::]:443 ssl ipv6only=on; # managed by Certbot
+        listen 443 ssl; # managed by Certbot
+
+        ssl_certificate /etc/letsencrypt/live/jamieapps.net/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/jamieapps.net/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+        
+        root /var/www/html;
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+        server_name jamieapps.net; # managed by Certbot
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+        location /cgi-bin {
+                include uwsgi_params;
+                uwsgi_pass uwsgi_server_testApp;
+        }
+        location /receive {
+                include uwsgi_params;
+                uwsgi_pass uwsgi_server_sendApp;
+        }
+        location /send {
+                include uwsgi_params;
+                uwsgi_pass uwsgi_server_receiveApp;
+        }
+
+}
